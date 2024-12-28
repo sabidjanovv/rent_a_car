@@ -23,7 +23,8 @@ import { Otp } from './otp/models/otp.model';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { RentalHistoryModule } from './rental_history/rental_history.module';
 import { RentalHistory } from './rental_history/models/rental_history.model';
-
+import { CarPhotoModule } from './car_photo/car_photo.module';
+import { CarPhoto } from './car_photo/models/car_photo.model';
 
 @Module({
   imports: [
@@ -46,7 +47,16 @@ import { RentalHistory } from './rental_history/models/rental_history.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [Admin, User, Car, Booking, Payment, Otp, RentalHistory],
+      models: [
+        Admin,
+        User,
+        Car,
+        Booking,
+        Payment,
+        Otp,
+        RentalHistory,
+        CarPhoto,
+      ],
       autoLoadModels: true,
       sync: { alter: true },
       logging: false,
@@ -61,6 +71,7 @@ import { RentalHistory } from './rental_history/models/rental_history.model';
     // BotModule,
     OtpModule,
     RentalHistoryModule,
+    CarPhotoModule,
   ],
   controllers: [],
   providers: [],
