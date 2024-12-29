@@ -18,28 +18,43 @@ export class BookingService {
   ) {}
 
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
-    // await this.carsService.findAllFreeCar()
     const { customer_id, car_id, start_date, end_date } = createBookingDto;
 
-    const existingCustomer = await this.userService.findOne(customer_id);
-    if (!existingCustomer) {
-      throw new BadRequestException('Foydayanuvchi topilmadi');
-    }
+    // Bugungi sanani olish
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Bugungi kunning vaqt qismini nolga sozlash
 
-    // start_date va end_date o'rtasidagi farqni olish
+    // start_date va end_date'ni Date turiga o‘tkazish
     const startDate = new Date(start_date);
     const endDate = new Date(end_date);
-    const timeDiff = endDate.getTime() - startDate.getTime();
 
-    if (timeDiff <= 0) {
+    // Sana validatsiyasi
+    if (startDate < today) {
+      throw new BadRequestException(
+        "Boshlanish sanasi bugungi kundan avval bo'lishi mumkin emas",
+      );
+    }
+
+    if (endDate < today) {
+      throw new BadRequestException(
+        "Tugash sanasi bugungi kundan avval bo'lishi mumkin emas",
+      );
+    }
+
+    // start_date va end_date o'rtasidagi farqni tekshirish
+    if (endDate <= startDate) {
       throw new BadRequestException(
         "Ijaraning tugash sanasi boshlanish sanasidan keyingi sana bo'lishi kerak",
       );
     }
 
-    const rentalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    // Foydalanuvchini topish
+    const existingCustomer = await this.userService.findOne(customer_id);
+    if (!existingCustomer) {
+      throw new BadRequestException('Foydayanuvchi topilmadi');
+    }
 
-    // Avtomobilning kunlik ijarasi narxini olish
+    // Avtomobilni topish va tekshirish
     const car = await this.carsService.findOne(car_id);
     if (!car) {
       throw new BadRequestException('Avtomobil topilmadi');
@@ -51,10 +66,16 @@ export class BookingService {
       );
     }
 
+    // Ijara narxini hisoblash
+    const rentalDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
+    );
     const totalPrice = rentalDays * car.daily_price;
 
+    // Avtomobil statusini yangilash
     await this.carModel.update({ status: 'booked' }, { where: { id: car_id } });
 
+    // Booking yaratish
     const booking = new this.bookingModel({
       ...createBookingDto,
       start_date: createBookingDto.start_date,

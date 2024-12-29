@@ -41,8 +41,8 @@ export class RentalHistory extends Model<RentalHistory> {
     allowNull: false,
   })
   owner_id: number;
-  @BelongsTo(() => User)
-  owner: User;
+  // @BelongsTo(() => User)
+  // owner: User;
   
   @ApiProperty({
     example: 1,

@@ -44,43 +44,63 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    try {
-      const activation_link = uuid.v4();
-
-      const [updatedCount, updatedUsers] = await this.userModel.update(
-        { ...updateUserDto, is_active: false, activation_link },
-        { where: { id }, returning: true },
-      );
-
-      if (updatedCount === 0) {
-        throw new BadRequestException(`User with ID: ${id} not found.`);
-      }
-
-      const updatedUser = updatedUsers[0];
-
-      try {
-        await this.mailService.sendMail(updatedUser);
-      } catch (mailError) {
-        console.error(
-          'Mail Sending Error (Xat yuborishda xatolik):',
-          mailError,
-        );
-        throw new BadRequestException(
-          'Error occurred while sending the email!',
-        );
-      }
-
-      return {
-        message:
-          'Successfully updated! Please check your email for the activation link!',
-      };
-    } catch (error) {
-      console.error('Update Error:', error);
-
-      throw new BadRequestException(
-        'An error occurred during the update process!',
-      );
+    // try {
+      // const activation_link = uuid.v4();
+      const user = await this.userModel.findByPk(id);
+    if (!user) {
+      throw new BadRequestException(`ID:${id} user does not exists!`);
     }
+    if(!user.is_owner){
+      const updatedFields = { ...updateUserDto, is_owner: false };
+      const updatedUser = await this.userModel.update(updatedFields, {
+        where: { id },
+        returning: true,
+      });
+      return updatedUser[1][0];
+    }else{
+      const updatedFields = { ...updateUserDto};
+      const updatedUser = await this.userModel.update(updatedFields, {
+        where: { id },
+        returning: true,
+      });
+      return updatedUser[1][0];
+    }
+
+      // const [updatedCount, updatedUsers] = await this.userModel.update(
+      //   { ...updateUserDto },
+      //   { where: { id }, returning: true },
+      // );
+
+      // if (updatedCount === 0) {
+      //   throw new BadRequestException(`User with ID: ${id} not found.`);
+      // }
+
+      // const updatedUser = updatedUsers[0];
+
+      // try {
+      //   await this.mailService.sendMail(updatedUser);
+      // } catch (mailError) {
+      //   console.error(
+      //     'Mail Sending Error (Xat yuborishda xatolik):',
+      //     mailError,
+      //   );
+      //   throw new BadRequestException(
+      //     'Error occurred while sending the email!',
+      //   );
+      // }
+
+    //   return {
+    //     message:
+    //       'Successfully updated!',
+    //     data: updatedUser
+    //   };
+    // } catch (error) {
+    //   console.error('Update Error:', error);
+
+    //   throw new BadRequestException(
+    //     'An error occurred during the update process!',
+    //   );
+    // }
   }
 
   async remove(id: number) {
@@ -200,6 +220,13 @@ export class UserService {
       lowerCaseAlphabets: false,
       specialChars: false,
     });
+
+    const user = await this.userModel.findOne({ where: { email } });
+    if (!user) {
+      throw new BadRequestException(`Email ${email} does not exists!`);
+    } else if (user.is_owner === true) {
+      throw new BadRequestException('User already owner!');
+    }
 
     const isSend = await this.mailService.sendOtp(email, otp);
 

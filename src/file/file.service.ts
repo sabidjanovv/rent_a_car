@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 
@@ -18,8 +18,8 @@ export class FileService {
 
       return fileName;
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException("Rasmni filega yozishda xatolik")
+      // console.log(error);
+      throw new BadRequestException("Rasmni filega yozishda xatolik")
     }
   }
 }

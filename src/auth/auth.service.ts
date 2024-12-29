@@ -62,7 +62,7 @@ export class AuthService {
 
       return { access_token: token };
     } catch (error) {
-      throw new InternalServerErrorException('Error refreshing token');
+      throw new BadRequestException('Error refreshing token');
     }
   }
 
@@ -233,8 +233,8 @@ export class AuthService {
     try {
       await this.mailService.sendMail(updatedUser[1][0]);
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Xat yuborishda xatolik');
+      // console.log(error);
+      throw new BadRequestException('Xat yuborishda xatolik');
     }
 
     const response = {
@@ -270,7 +270,7 @@ export class AuthService {
         message: 'Foydalanuvchi muvaffaqiyatli faollashtirildi.',
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -345,221 +345,4 @@ export class AuthService {
       throw new BadRequestException('Internal server error');
     }
   }
-
-  // =========================== CUSTOMER =======================================
-
-  // async generateTokenCustomer(customer: Customer) {
-  //   const payload = {
-  //     id: customer.id,
-  //     login: customer.login,
-  //     is_active: customer.is_active,
-  //     is_customer: customer.is_customer,
-  //   };
-
-  //   const [access_token, refresh_token] = await Promise.all([
-  //     this.jwtService.signAsync(payload, {
-  //       secret: process.env.ACCESS_TOKEN_KEY,
-  //       expiresIn: process.env.ACCESS_TOKEN_TIME,
-  //     }),
-  //     this.jwtService.signAsync(payload, {
-  //       secret: process.env.REFRESH_TOKEN_KEY,
-  //       expiresIn: process.env.REFRESH_TOKEN_TIME,
-  //     }),
-  //   ]);
-
-  //   return { access_token, refresh_token };
-  // }
-
-  // async customerSignUp(createCustomerDto: CreateCustomerDto, res: Response) {
-  //   const customer_login = await this.customerModel.findOne({
-  //     where: { login: createCustomerDto.login },
-  //   });
-
-  //   const customer_phone_number = await this.customerModel.findOne({
-  //     where: { phone_number: createCustomerDto.phone_number },
-  //   });
-
-  //   const customer_extra_phone_number = await this.customerModel.findOne({
-  //     where: { extra_phone_number: createCustomerDto.extra_phone_number },
-  //   });
-
-  //   const customer_email = await this.customerModel.findOne({
-  //     where: { email: createCustomerDto.email },
-  //   });
-
-  //   const customer_passport_number = await this.customerModel.findOne({
-  //     where: { passport_number: createCustomerDto.passport_number },
-  //   });
-
-  //   const customer_license_number = await this.customerModel.findOne({
-  //     where: { license_number: createCustomerDto.license_number },
-  //   });
-
-  //   if (
-  //     customer_login ||
-  //     customer_phone_number ||
-  //     customer_extra_phone_number ||
-  //     customer_email ||
-  //     customer_passport_number ||
-  //     customer_license_number
-  //   ) {
-  //     throw new BadRequestException(
-  //       "Ma'lumotlar orasida ba'zi ma'lumot bilan avval ro'yxatdan o'tilgan!",
-  //     );
-  //   }
-
-  //   if (createCustomerDto.password !== createCustomerDto.confirm_password) {
-  //     throw new BadRequestException('Parollar mos emas');
-  //   }
-
-  //   const hashed_password = await bcrypt.hash(createCustomerDto.password, 7);
-  //   const newCustomer = await this.customerModel.create({
-  //     ...createCustomerDto,
-  //     hashed_password,
-  //   });
-
-  //   const tokens = await this.generateTokenCustomer(newCustomer);
-  //   const hashed_refresh_token = await bcrypt.hash(tokens.refresh_token, 7);
-  //   const activation_link = uuid.v4();
-
-  //   const updatedCustomer = await this.customerModel.update(
-  //     { hashed_refresh_token, activation_link },
-  //     { where: { id: newCustomer.id }, returning: true },
-  //   );
-
-  //   res.cookie('refresh_token', tokens.refresh_token, {
-  //     httpOnly: true,
-  //     maxAge: +process.env.REFRESH_TIME_MS,
-  //   });
-
-  //   try {
-  //     await this.mailService.sendMailCustomer(updatedCustomer[1][0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new InternalServerErrorException('Xat yuborishda xatolik');
-  //   }
-
-  //   const response = {
-  //     message:
-  //       "Customer tizimga muvaffaqiyatli qo'shildi, active bo'lish uchun emailga yuborilgan url ustiga bosing!",
-  //     customer: updatedCustomer[1][0],
-  //     access_token: tokens.access_token,
-  //   };
-
-  //   return response;
-  // }
-
-  // async activateCustomer(link: string, res: Response) {
-  //   try {
-  //     const customer = await this.customerModel.findOne({
-  //       where: { activation_link: link },
-  //     });
-  //     if (!customer) {
-  //       return res.status(400).send({ message: 'Foydalanuvchi topilmadi!' });
-  //     }
-
-  //     if (customer.is_active) {
-  //       return res
-  //         .status(400)
-  //         .send({ message: 'Foydalanuvchi allaqachon faollashtirilgan.' });
-  //     }
-
-  //     customer.is_active = true;
-  //     customer.is_customer = true;
-  //     await customer.save();
-
-  //     res.send({
-  //       is_active: customer.is_active,
-  //       message: 'Foydalanuvchi muvaffaqiyatli faollashtirildi.',
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // async customerSignIn(customerSignInDto: SignInDto, res: Response) {
-  //   const { login, password } = customerSignInDto;
-  //   const customer = await this.customerModel.findOne({
-  //     where: { login },
-  //   });
-
-  //   if (!customer) {
-  //     throw new UnauthorizedException('customer topilmadi');
-  //   }
-
-  //   if (!customer.is_customer) {
-  //     throw new UnauthorizedException(
-  //       'Emailga yuborilgan link orqali tasdiqlang!',
-  //     );
-  //   }
-
-  //   const validPassword = await bcrypt.compare(
-  //     password,
-  //     customer.hashed_password,
-  //   );
-  //   if (!validPassword) {
-  //     throw new UnauthorizedException("Noto'g'ri parol");
-  //   }
-
-  //   const tokens = await this.generateTokenCustomer(customer);
-  //   const hashed_refresh_token = await bcrypt.hash(tokens.refresh_token, 7);
-  //   res.cookie('refresh_token', tokens.refresh_token, {
-  //     httpOnly: true,
-  //     maxAge: +process.env.REFRESH_TIME_MS,
-  //   });
-
-  //   await this.customerModel.update(
-  //     { is_active: true, hashed_refresh_token },
-  //     { where: { login: login } },
-  //   );
-  //   return res.json({
-  //     message: 'Tizimga muvaffaqiyatli kirildi',
-  //     access_token: tokens.access_token,
-  //   });
-  // }
-
-  // async customerSignOut(refreshToken: string, res: Response, id: number) {
-  //   try {
-  //     const payload = await this.jwtService.verifyAsync(refreshToken, {
-  //       secret: process.env.REFRESH_TOKEN_KEY,
-  //     });
-
-  //     const customer = await this.customerModel.findOne({
-  //       where: { id: payload.id },
-  //     });
-
-  //     if (customer.hashed_refresh_token === '') {
-  //       throw new UnauthorizedException('This customer already signed out');
-  //     }
-
-  //     if (!customer) {
-  //       throw new UnauthorizedException('This customer not found');
-  //     }
-
-  //     if (Number(id) !== Number(customer.id)) {
-  //       throw new BadRequestException('Invalid id or token');
-  //     }
-
-  //     const valid_refresh_token = await bcrypt.compare(
-  //       refreshToken,
-  //       customer.hashed_refresh_token,
-  //     );
-  //     if (!valid_refresh_token) {
-  //       throw new UnauthorizedException("So'rovda xatolik");
-  //     }
-
-  //     res.clearCookie('refresh_token', {
-  //       httpOnly: true,
-  //     });
-
-  //     await this.customerModel.update(
-  //       { hashed_refresh_token: '', is_active: false }, // Data to update
-  //       { where: { id: payload.id } }, // Options object with `where` clause
-  //     );
-
-  //     return { message: 'customer success signout', id: payload.id };
-  //   } catch (error) {
-  //     throw new BadRequestException('Internal server error');
-  //   }
-  // }
 }

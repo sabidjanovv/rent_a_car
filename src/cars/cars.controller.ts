@@ -12,6 +12,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { CarGuard } from '../common/guards/car.guard';
+import { CarByIdGuard } from '../common/guards/car-by-id.guard';
 // import { CarGuard } from '../common/guards/car.guard';
 // import { AdminGuard } from '../common/guards/admin.guard';
 // import { HybridGuard } from '../common/guards/hybrid.guard';
@@ -21,7 +23,7 @@ import { UpdateCarDto } from './dto/update-car.dto';
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
-  // @UseGuards(CarGuard)
+  @UseGuards(CarGuard)
   @Post()
   @ApiOperation({ summary: "Yangi mashina qo'shish" })
   @ApiResponse({
@@ -69,7 +71,7 @@ export class CarsController {
     return this.carsService.findOne(+id);
   }
 
-  // @UseGuards(CarGuard)
+  @UseGuards(CarByIdGuard)
   @Patch(':id')
   @ApiOperation({ summary: "ID orqali ma'lum bir mashinani yangilash" })
   @ApiParam({
@@ -87,7 +89,7 @@ export class CarsController {
     return this.carsService.update(+id, updateCarDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(CarByIdGuard)
   @Delete(':id')
   @ApiOperation({ summary: "ID orqali ma'lum bir mashinani o'chirish" })
   @ApiParam({

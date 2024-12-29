@@ -14,13 +14,15 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 // import { PaymentCreateGuard } from '../common/guards/payment-create.guard';
 // import { AdminGuard } from '../common/guards/admin.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { PaymentCreateGuard } from '../common/guards/payment-create.guard';
+import { AdminGuard } from '../common/guards/admin.guard';
 
 @ApiTags('Payments')
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  // @UseGuards(PaymentCreateGuard)
+  @UseGuards(PaymentCreateGuard)
   @ApiOperation({ summary: "To'lovni yaratish" })
   @ApiResponse({ status: 201, description: "To'lov muvaffaqiyatli yaratildi." })
   @ApiResponse({ status: 400, description: "Xato ma'lumotlar." })
@@ -29,7 +31,7 @@ export class PaymentsController {
     return this.paymentsService.create(createPaymentDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Barcha to'lovlarni olish" })
   @ApiResponse({ status: 200, description: "To'lovlar ro'yxati." })
   @Get()
@@ -37,7 +39,7 @@ export class PaymentsController {
     return this.paymentsService.findAll();
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "ID orqali to'lovni olish" })
   @ApiParam({
     name: 'id',
@@ -51,7 +53,7 @@ export class PaymentsController {
     return this.paymentsService.findOne(+id);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "To'lovni yangilash" })
   @ApiParam({
     name: 'id',
@@ -69,7 +71,7 @@ export class PaymentsController {
     return this.paymentsService.update(+id, updatePaymentDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "To'lovni o'chirish" })
   @ApiParam({
     name: 'id',

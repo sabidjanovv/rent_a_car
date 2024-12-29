@@ -63,7 +63,7 @@ export class AdminService {
         token,
       };
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new BadRequestException(error);
     }
   }
 

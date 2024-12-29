@@ -9,21 +9,25 @@ import {
   Res,
   Req,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { Response, Request } from 'express';
-import { PhoneUserDto } from './dto/phone-user.dto';
+// import { Response, Request } from 'express';
+// import { PhoneUserDto } from './dto/phone-user.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { EmailUserDto } from './dto/email-user.dto';
+import { AdminGuard } from '../common/guards/admin.guard';
+import { UserSelfGuard } from '../common/guards/user-self.guard';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AdminGuard)
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'List of all users' })
@@ -31,6 +35,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @UseGuards(UserSelfGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiParam({ name: 'id', description: 'User unique identifier' })
@@ -43,6 +48,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @UseGuards(UserSelfGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', description: 'User unique identifier' })
@@ -52,6 +58,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(UserSelfGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'id', description: 'User unique identifier' })

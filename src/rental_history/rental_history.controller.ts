@@ -14,13 +14,15 @@ import { UpdateRentalHistoryDto } from './dto/update-rental_history.dto';
 // import { AdminGuard } from '../common/guards/admin.guard';
 // import { CustomerRentalHistoryGuard } from '../common/guards/customer-rental-history.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { AdminGuard } from '../common/guards/admin.guard';
+import { CustomerRentalHistoryGuard } from '../common/guards/customer-rental-history.guard';
 
 @ApiTags('Rental History')
 @Controller('rental-history')
 export class RentalHistoryController {
   constructor(private readonly rentalHistoryService: RentalHistoryService) {}
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Yangi ijaraga olish tarixini qo'shish" })
   @ApiResponse({
     status: 201,
@@ -32,7 +34,7 @@ export class RentalHistoryController {
     return this.rentalHistoryService.create(createRentalHistoryDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: 'Barcha ijara tarixlarini olish' })
   @ApiResponse({ status: 200, description: "Ijara tarixlari ro'yxati." })
   @Get()
@@ -40,7 +42,7 @@ export class RentalHistoryController {
     return this.rentalHistoryService.findAll();
   }
 
-  // @UseGuards(CustomerRentalHistoryGuard)
+  @UseGuards(CustomerRentalHistoryGuard)
   @ApiOperation({ summary: "ID bo'yicha ijara tarixini olish" })
   @ApiParam({
     name: 'id',
@@ -54,7 +56,7 @@ export class RentalHistoryController {
     return this.rentalHistoryService.findOne(+id);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: 'Ijara tarixini yangilash' })
   @ApiParam({
     name: 'id',
@@ -75,7 +77,7 @@ export class RentalHistoryController {
     return this.rentalHistoryService.update(+id, updateRentalHistoryDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Ijara tarixini o'chirish" })
   @ApiParam({
     name: 'id',

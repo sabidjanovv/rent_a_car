@@ -52,7 +52,7 @@ export class CarsService {
               { status: 'free' },
               { where: { id: car.id } },
             );
-            console.log(`Car with ID: ${car.id} status updated to 'free'`);
+            // console.log(`Car with ID: ${car.id} status updated to 'free'`);
           }
         }
       }
@@ -103,7 +103,7 @@ export class CarsService {
               { status: 'free' },
               { where: { id: car.id } },
             );
-            console.log(`Car with ID: ${car.id} status updated to 'free'`);
+            // console.log(`Car with ID: ${car.id} status updated to 'free'`);
           }
         }
       }
@@ -154,7 +154,7 @@ export class CarsService {
             { status: 'free' },
             { where: { id: car_id } },
           );
-          console.log(`Car with ID: ${car_id} status updated to 'free'`);
+          // console.log(`Car with ID: ${car_id} status updated to 'free'`);
         }
       }
     }

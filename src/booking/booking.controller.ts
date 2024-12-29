@@ -15,13 +15,16 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 // import { AdminGuard } from '../common/guards/admin.guard';
 // import { BookingFindOneGuard } from '../common/guards/booking-findone.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { AdminGuard } from '../common/guards/admin.guard';
+import { CustomerBookingGuard } from '../common/guards/customer-booking.guard';
+import { BookingByIdGuard } from '../common/guards/booking-by-id.guard';
 
 @ApiTags('Booking')
 @Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
-  // @UseGuards(CustomerBookingGuard)
+  @UseGuards(CustomerBookingGuard)
   @ApiOperation({ summary: 'Yangi booking yaratish' })
   @ApiResponse({
     status: 201,
@@ -33,7 +36,7 @@ export class BookingController {
     return this.bookingService.create(createBookingDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: 'Barcha bookinglarni olish' })
   @ApiResponse({ status: 200, description: "Bookinglar ro'yxati." })
   @Get()
@@ -41,7 +44,7 @@ export class BookingController {
     return this.bookingService.findAll();
   }
 
-  // @UseGuards(BookingFindOneGuard)
+  @UseGuards(BookingByIdGuard)
   @ApiOperation({ summary: 'Bookingni ID orqali olish' })
   @ApiParam({
     name: 'id',
@@ -55,7 +58,7 @@ export class BookingController {
     return this.bookingService.findOne(+id);
   }
 
-  // @UseGuards(BookingFindOneGuard)
+  @UseGuards(BookingByIdGuard)
   @ApiOperation({ summary: 'Bookingni bekor qilish' })
   @ApiParam({
     name: 'id',
@@ -72,7 +75,7 @@ export class BookingController {
     return this.bookingService.cancel(+id);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Booking ma'lumotlarini yangilash" })
   @ApiParam({
     name: 'id',
@@ -90,7 +93,7 @@ export class BookingController {
     return this.bookingService.update(+id, updateBookingDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Bookingni o'chirish" })
   @ApiParam({
     name: 'id',

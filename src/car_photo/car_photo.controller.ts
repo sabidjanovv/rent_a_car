@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,12 +16,14 @@ import { CarPhotoService } from './car_photo.service';
 import { CreateCarPhotoDto } from './dto/create-car_photo.dto';
 import { CarPhoto } from './models/car_photo.model';
 import { UpdateCarPhotoDto } from './dto/update-car_photo.dto';
+// import { CarByIdGuard } from '../common/guards/car-by-id.guard';
 
 @ApiTags('Obyekt rasmlari')
 @Controller('car-photo')
 export class CarPhotoController {
   constructor(private readonly carPhotoService: CarPhotoService) {}
 
+  // @UseGuards(CarByIdGuard)
   @ApiOperation({ summary: 'Obyekt Idsi va rasmini qoshish' })
   @ApiResponse({
     status: 201,
@@ -33,7 +36,7 @@ export class CarPhotoController {
     @Body() createCarPhotoDto: CreateCarPhotoDto,
     @UploadedFile() image: any,
   ) {
-    console.log(image);
+    // console.log(image);
 
     return this.carPhotoService.create(createCarPhotoDto, image);
   }

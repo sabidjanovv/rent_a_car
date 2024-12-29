@@ -44,7 +44,7 @@ export class CarPhotoService {
       where: { id },
       returning: true,
     });
-    console.log(carPhoto);
+    // console.log(carPhoto);
     return carPhoto[1][0];
   }
 

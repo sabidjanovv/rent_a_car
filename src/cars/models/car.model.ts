@@ -130,7 +130,7 @@ export class Car extends Model<Car, ICarAttr> {
   rental_histories: RentalHistory[];
 
   @HasMany(() => CarPhoto)
-  car_photos: CarPhoto[];
+  images: CarPhoto[];
 
   //   @HasMany(() => Comment)
   //   comments: Comment[];

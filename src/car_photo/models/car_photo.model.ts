@@ -15,7 +15,7 @@ interface CarPhotoCreationAttr {
   url: string;
 }
 
-@Table({ tableName: 'Car_photo', timestamps: false })
+@Table({ tableName: 'car_photo', timestamps: false })
 export class CarPhoto extends Model<CarPhoto, CarPhotoCreationAttr> {
   @ApiProperty({
     example: 1,
