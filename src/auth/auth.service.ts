@@ -199,7 +199,7 @@ export class AuthService {
     })
 
     if (user) {
-      throw new BadRequestException('Bunday user mavjud');
+      throw new BadRequestException("Bu email orqali allaqachon ro'yxattan o'tilgan");
     }
     if (existingLogin) {
       throw new BadRequestException('Bunday login allaqachon mavjud');

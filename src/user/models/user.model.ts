@@ -1,5 +1,10 @@
 import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
+import { Booking } from '../../booking/models/booking.model';
+import { Payment } from '../../payments/models/payment.model';
+import { Car } from '../../cars/models/car.model';
+import { Like } from '../../likes/models/like.model';
+import { RentalHistory } from '../../rental_history/models/rental_history.model';
 
 interface IUserAttr {
   full_name: string;
@@ -22,7 +27,10 @@ export class User extends Model<User, IUserAttr> {
   })
   id: number;
 
-  @ApiProperty({ example: 'Sardor Sobidjonov', description: "User's full name" })
+  @ApiProperty({
+    example: 'Sardor Sobidjonov',
+    description: "User's full name",
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -114,4 +122,18 @@ export class User extends Model<User, IUserAttr> {
   })
   activation_link: string;
 
+  @HasMany(() => Like)
+  likes: Like[];
+
+  @HasMany(() => Car)
+  cars: Car[];
+
+  @HasMany(() => Booking)
+  bookings: Booking[];
+
+  // @HasMany(() => Payment)
+  // payments: Payment[];
+
+  @HasMany(() => RentalHistory)
+  rentalHistories: RentalHistory[];
 }

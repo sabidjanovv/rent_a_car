@@ -6,12 +6,13 @@ import { Car } from './models/car.model';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
 import { Booking } from '../booking/models/booking.model';
+import { LikesModule } from '../likes/likes.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Car, Booking]),
     JwtModule.register({}),
-    UserModule,
+    UserModule
   ],
   controllers: [CarsController],
   providers: [CarsService],

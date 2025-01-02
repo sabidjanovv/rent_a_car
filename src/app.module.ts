@@ -25,6 +25,8 @@ import { RentalHistoryModule } from './rental_history/rental_history.module';
 import { RentalHistory } from './rental_history/models/rental_history.model';
 import { CarPhotoModule } from './car_photo/car_photo.module';
 import { CarPhoto } from './car_photo/models/car_photo.model';
+import { LikesModule } from './likes/likes.module';
+import { Like } from './likes/models/like.model';
 
 @Module({
   imports: [
@@ -56,6 +58,7 @@ import { CarPhoto } from './car_photo/models/car_photo.model';
         Otp,
         RentalHistory,
         CarPhoto,
+        Like
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -72,6 +75,7 @@ import { CarPhoto } from './car_photo/models/car_photo.model';
     OtpModule,
     RentalHistoryModule,
     CarPhotoModule,
+    LikesModule,
   ],
   controllers: [],
   providers: [],

@@ -14,6 +14,8 @@ export class CarsService {
   ) {}
 
   async create(createCarDto: CreateCarDto) {
+    createCarDto.model = createCarDto.model.toLowerCase();
+    createCarDto.brand = createCarDto.brand.toLowerCase();
     return await this.carModel.create(createCarDto);
   }
 
@@ -63,7 +65,7 @@ export class CarsService {
     });
 
     // Return the updated list of cars
-    return { cars: allCars, total: allCars.length };
+    return { data: allCars, total: allCars.length };
   }
 
   async findAllFreeCar() {
@@ -115,9 +117,56 @@ export class CarsService {
     });
 
     return {
-      free_cars: allFreeCars,
+      data: allFreeCars,
       total: allFreeCars.length,
     };
+  }
+
+  async findByBrand(brand: string) {
+    const cars = await this.carModel.findAll({
+      where: { brand: brand.toLowerCase() },
+      include: { all: true },
+    });
+    if (!cars.length) {
+      throw new NotFoundException(`No cars found with the brand: ${brand}`);
+    }
+    return { data: cars, total: cars.length };
+  }
+
+  async findByModel(model: string) {
+    const cars = await this.carModel.findAll({
+      where: { model: model.toLowerCase() },
+      include: { all: true },
+    });
+
+    if (!cars.length) {
+      throw new NotFoundException(`No cars found with the model: ${model}`);
+    }
+
+    return { data: cars, total: cars.length };
+  }
+
+  async findCarsByPriceRange(minPrice: number, maxPrice: number) {
+    if (!minPrice || !maxPrice) {
+      throw new NotFoundException('Please provide both minPrice and maxPrice.');
+    }
+
+    const cars = await this.carModel.findAll({
+      where: {
+        daily_price: {
+          [Op.between]: [Number(minPrice), Number(maxPrice)],
+        },
+      },
+      include: { all: true },
+    });
+
+    if (!cars.length) {
+      throw new NotFoundException(
+        'No cars found within the given price range.',
+      );
+    }
+
+    return { data: cars, total: cars.length };
   }
 
   async findOne(car_id: number) {

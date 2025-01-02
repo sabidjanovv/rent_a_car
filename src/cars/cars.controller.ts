@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { CarsService } from './cars.service';
@@ -57,7 +58,59 @@ export class CarsController {
     return this.carsService.findAllFreeCar();
   }
 
-  // @UseGuards(HybridGuard)
+  @Get('price')
+  @ApiOperation({ summary: "Narx oralig'idagi mashinalarni olish" })
+  @ApiResponse({
+    status: 200,
+    description: 'Mashinalar muvaffaqiyatli olindi.',
+  })
+  @ApiResponse({ status: 400, description: 'Noto‘g‘ri parametrlar.' })
+  async findCarsByPriceRange(
+    @Query('min') min: string,
+    @Query('max') max: string,
+  ) {
+    const minPrice = parseFloat(min);
+    const maxPrice = parseFloat(max);
+
+    if (isNaN(minPrice) || isNaN(maxPrice)) {
+      throw new Error("Min va max qiymatlar son bo'lishi kerak.");
+    }
+
+    return this.carsService.findCarsByPriceRange(minPrice, maxPrice);
+  }
+
+  @Get('brand/:brand')
+  @ApiOperation({ summary: "brand orqali ma'lum bir mashinalarni olish" })
+  @ApiParam({
+    name: 'brand',
+    description: "Olish kerak bo'lgan mashinalarning brandi",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Mashinalar muvaffaqiyatli olindi.',
+  })
+  @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
+  findByBrand(@Param('brand') brand: string) {
+    return this.carsService.findByBrand(brand);
+  }
+
+  @Get('model/:model')
+  @ApiOperation({ summary: "model orqali ma'lum bir mashinalarni olish" })
+  @ApiParam({
+    name: 'model',
+    description: "Olish kerak bo'lgan mashinalarning modeli",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Mashinalar muvaffaqiyatli olindi.',
+  })
+  @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
+  findByModel(@Param('model') model: string) {
+    return this.carsService.findByModel(model);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: "ID orqali ma'lum bir mashinani olish" })
   @ApiParam({

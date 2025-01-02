@@ -8,6 +8,7 @@ import { MailModule } from '../mail/mail.module';
 // import { BotModule } from '../bot/bot.module';
 import { OtpModule } from '../otp/otp.module';
 import { Otp } from '../otp/models/otp.model';
+import { LikesModule } from '../likes/likes.module';
 // import { Bot } from '../bot/models/bot.model';
 
 @Module({
@@ -16,7 +17,7 @@ import { Otp } from '../otp/models/otp.model';
     JwtModule.register({}),
     MailModule,
     // BotModule,
-    OtpModule,
+    OtpModule
   ],
   controllers: [UserController],
   providers: [UserService],
