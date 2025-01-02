@@ -23,11 +23,19 @@ export class OwnersService {
     return owner;
   }
 
-  update(id: number, updateOwnerDto: UpdateOwnerDto) {
+  async update(id: number, updateOwnerDto: UpdateOwnerDto) {
+    const owner = await this.ownerModel.findByPk(id);
+    if (!owner) {
+      throw new NotFoundException(`Owner with ID: ${id} not found!`);
+    }
     return this.ownerModel.update(updateOwnerDto, { where: { id } });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const owner = await this.ownerModel.findByPk(id);
+    if (!owner) {
+      throw new NotFoundException(`Owner with ID: ${id} not found!`);
+    }
     return this.ownerModel.destroy({ where: { id } });
   }
 }

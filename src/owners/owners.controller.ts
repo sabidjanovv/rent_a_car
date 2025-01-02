@@ -6,25 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { OwnersService } from './owners.service';
 import { CreateOwnerDto } from './dto/create-owner.dto';
 import { UpdateOwnerDto } from './dto/update-owner.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { AdminGuard } from '../common/guards/admin.guard';
 
 @ApiTags('Owners') // Grouping the API endpoints under "Owners"
 @Controller('owners')
 export class OwnersController {
   constructor(private readonly ownersService: OwnersService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new owner' })
-  @ApiResponse({ status: 201, description: 'Owner created successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid data' })
-  create(@Body() createOwnerDto: CreateOwnerDto) {
-    return this.ownersService.create(createOwnerDto);
-  }
-
+  @UseGuards(AdminGuard)
   @Get()
   @ApiOperation({ summary: 'Retrieve all owners' })
   @ApiResponse({
@@ -35,6 +30,7 @@ export class OwnersController {
     return this.ownersService.findAll();
   }
 
+  @UseGuards(AdminGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve an owner by ID' })
   @ApiParam({ name: 'id', description: 'Unique identifier of the owner' })
@@ -44,6 +40,7 @@ export class OwnersController {
     return this.ownersService.findOne(+id);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update an owner' })
   @ApiParam({ name: 'id', description: 'Unique identifier of the owner' })
@@ -53,6 +50,7 @@ export class OwnersController {
     return this.ownersService.update(+id, updateOwnerDto);
   }
 
+  @UseGuards(AdminGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an owner' })
   @ApiParam({ name: 'id', description: 'Unique identifier of the owner' })
