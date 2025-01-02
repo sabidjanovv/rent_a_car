@@ -62,12 +62,12 @@ export class Car extends Model<Car, ICarAttr> {
   })
   year: string;
 
-  @ApiProperty({ example: 'AA1234BB', description: 'Car number' })
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  car_number: string;
+  // @ApiProperty({ example: 'AA1234BB', description: 'Car number' })
+  // @Column({
+  //   type: DataType.STRING,
+  //   allowNull: false,
+  // })
+  // car_number: string;
 
   @ApiProperty({ example: 'booked', description: 'Car status' })
   @Column({

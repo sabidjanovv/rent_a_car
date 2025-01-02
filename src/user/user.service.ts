@@ -13,12 +13,14 @@ import { Otp } from '../otp/models/otp.model';
 import { AddMinutesToDate } from '../helpers/addMinutes';
 import { decode, encode } from '../helpers/crypto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { Owner } from '../owners/models/owner.model';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User) private userModel: typeof User,
     @InjectModel(Otp) private otpModel: typeof Otp,
+    @InjectModel(Owner) private ownerModel: typeof Owner,
     private readonly mailService: MailService,
     // private readonly botService: BotService,
   ) {}
@@ -45,20 +47,20 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     // try {
-      // const activation_link = uuid.v4();
-      const user = await this.userModel.findByPk(id);
+    // const activation_link = uuid.v4();
+    const user = await this.userModel.findByPk(id);
     if (!user) {
       throw new BadRequestException(`ID:${id} user does not exists!`);
     }
-    if(!user.is_owner){
+    if (!user.is_owner) {
       const updatedFields = { ...updateUserDto, is_owner: false };
       const updatedUser = await this.userModel.update(updatedFields, {
         where: { id },
         returning: true,
       });
       return updatedUser[1][0];
-    }else{
-      const updatedFields = { ...updateUserDto};
+    } else {
+      const updatedFields = { ...updateUserDto };
       const updatedUser = await this.userModel.update(updatedFields, {
         where: { id },
         returning: true,
@@ -66,28 +68,28 @@ export class UserService {
       return updatedUser[1][0];
     }
 
-      // const [updatedCount, updatedUsers] = await this.userModel.update(
-      //   { ...updateUserDto },
-      //   { where: { id }, returning: true },
-      // );
+    // const [updatedCount, updatedUsers] = await this.userModel.update(
+    //   { ...updateUserDto },
+    //   { where: { id }, returning: true },
+    // );
 
-      // if (updatedCount === 0) {
-      //   throw new BadRequestException(`User with ID: ${id} not found.`);
-      // }
+    // if (updatedCount === 0) {
+    //   throw new BadRequestException(`User with ID: ${id} not found.`);
+    // }
 
-      // const updatedUser = updatedUsers[0];
+    // const updatedUser = updatedUsers[0];
 
-      // try {
-      //   await this.mailService.sendMail(updatedUser);
-      // } catch (mailError) {
-      //   console.error(
-      //     'Mail Sending Error (Xat yuborishda xatolik):',
-      //     mailError,
-      //   );
-      //   throw new BadRequestException(
-      //     'Error occurred while sending the email!',
-      //   );
-      // }
+    // try {
+    //   await this.mailService.sendMail(updatedUser);
+    // } catch (mailError) {
+    //   console.error(
+    //     'Mail Sending Error (Xat yuborishda xatolik):',
+    //     mailError,
+    //   );
+    //   throw new BadRequestException(
+    //     'Error occurred while sending the email!',
+    //   );
+    // }
 
     //   return {
     //     message:
@@ -296,6 +298,19 @@ export class UserService {
     await this.otpModel.update({ verified: true }, { where: { email } });
 
     await this.userModel.update({ is_owner: true }, { where: { email } });
+
+    const user = await this.userModel.findOne({ where: { email } });
+
+    if (user) {
+      await this.ownerModel.create({
+        full_name: user.full_name,
+        login: user.login,
+        email: user.email,
+        phone_number: user.phone_number,
+      });
+    } else {
+      throw new Error('User not found');
+    }
 
     return { message: "OTP tasdiqlandi, siz endi owner bo'ldingiz." };
   }

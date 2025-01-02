@@ -20,12 +20,12 @@ export class CreateCarDto {
   @IsString()
   year: string;
 
-  @ApiProperty({ example: '01|A001AA', description: 'Car number' })
-  @IsString()
-  @Matches(/^\d{2}\|[A-Z]\d{3}[A-Z]{2}$/, {
-    message: 'Car number must be in the format "01|A001AA"',
-  })
-  car_number: string;
+  // @ApiProperty({ example: '01|A001AA', description: 'Car number' })
+  // @IsString()
+  // @Matches(/^\d{2}\|[A-Z]\d{3}[A-Z]{2}$/, {
+  //   message: 'Car number must be in the format "01|A001AA"',
+  // })
+  // car_number: string;
 
   @ApiProperty({ example: 500000, description: 'Daily rental price' })
   @IsNumber()

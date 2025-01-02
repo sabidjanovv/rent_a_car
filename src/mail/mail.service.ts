@@ -7,7 +7,7 @@ export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
   async sendMail(user: User) {
-    const url = `${process.env.API_URL}:${process.env.PORT}/api/auth/activate/${user.activation_link}`;
+    const url = `${process.env.API_URL}:${process.env.PORT}/auth/activate/${user.activation_link}`;
     await this.mailerService.sendMail({
       to: user.email,
       subject: "Rent a Car'ga xush kelibsiz",

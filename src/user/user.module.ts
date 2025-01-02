@@ -9,11 +9,12 @@ import { MailModule } from '../mail/mail.module';
 import { OtpModule } from '../otp/otp.module';
 import { Otp } from '../otp/models/otp.model';
 import { LikesModule } from '../likes/likes.module';
+import { Owner } from '../owners/models/owner.model';
 // import { Bot } from '../bot/models/bot.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([User, Otp]),
+    SequelizeModule.forFeature([User, Otp, Owner]),
     JwtModule.register({}),
     MailModule,
     // BotModule,

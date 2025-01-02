@@ -27,17 +27,11 @@ import { CarPhotoModule } from './car_photo/car_photo.module';
 import { CarPhoto } from './car_photo/models/car_photo.model';
 import { LikesModule } from './likes/likes.module';
 import { Like } from './likes/models/like.model';
+import { OwnersModule } from './owners/owners.module';
+import { Owner } from './owners/models/owner.model';
 
 @Module({
   imports: [
-    // TelegrafModule.forRootAsync({
-    //   botName: BOT_NAME,
-    //   useFactory: () => ({
-    //     token: process.env.BOT_TOKEN,
-    //     include: [BotModule],
-    //     middlewares: [],
-    //   }),
-    // }),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, 'static'),
@@ -58,7 +52,8 @@ import { Like } from './likes/models/like.model';
         Otp,
         RentalHistory,
         CarPhoto,
-        Like
+        Like,
+        Owner
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -71,11 +66,11 @@ import { Like } from './likes/models/like.model';
     CarsModule,
     BookingModule,
     PaymentsModule,
-    // BotModule,
     OtpModule,
     RentalHistoryModule,
     CarPhotoModule,
     LikesModule,
+    OwnersModule,
   ],
   controllers: [],
   providers: [],
