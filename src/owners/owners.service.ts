@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOwnerDto } from './dto/create-owner.dto';
 import { UpdateOwnerDto } from './dto/update-owner.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -15,8 +15,12 @@ export class OwnersService {
     return this.ownerModel.findAll();
   }
 
-  findOne(id: number) {
-    return this.ownerModel.findByPk(id);
+  async findOne(id: number) {
+    const owner = await this.ownerModel.findByPk(id);
+    if (!owner) {
+      throw new NotFoundException(`Owner with ID: ${id} not found!`);
+    }
+    return owner;
   }
 
   update(id: number, updateOwnerDto: UpdateOwnerDto) {
