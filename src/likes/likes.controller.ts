@@ -13,6 +13,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { AdminGuard } from '../common/guards/admin.guard';
 import { UserSelfLikesGuard } from '../common/guards/user-self-likes.guard';
 import { UserSelfLikesDeleteGuard } from '../common/guards/user-self-delete-likes.guard';
+import { UserSelfGuard } from '../common/guards/user-self.guard';
 
 @ApiTags('Likes') // Corrected spelling
 @Controller('likes')
@@ -50,7 +51,7 @@ export class LikesController {
     return this.likesService.findOne(id);
   }
 
-  @UseGuards(UserSelfLikesDeleteGuard)
+  @UseGuards(UserSelfGuard)
   @Get('user/:id')
   @ApiOperation({ summary: 'Retrieve all likes by a specific user' })
   @ApiParam({ name: 'id', description: 'User ID' })

@@ -90,7 +90,11 @@ export class BookingService {
 
   async findAll() {
     await this.carsService.findAllFreeCar();
-    return this.bookingModel.findAll({ include: { all: true } });
+    const bookings = await this.bookingModel.findAll({ include: { all: true } });
+    return{
+      data: bookings,
+      total: bookings.length
+    }
   }
 
   async findOne(id: number) {

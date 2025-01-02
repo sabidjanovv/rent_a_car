@@ -15,8 +15,12 @@ export class LikesService {
     return this.likeModel.create(createLikeDto);
   }
 
-  findAll() {
-    return this.likeModel.findAll();
+  async findAll() {
+    const likes = await this.likeModel.findAll();
+    return {
+      data: likes,
+      total: likes.length
+    }
   }
 
   async findByUserId(userId: number) {
@@ -27,7 +31,11 @@ export class LikesService {
         `User with ID: ${userId} not found. (Id: ${userId} bo'lgan foydalanuvchi topilmadi.)`,
       );
     }
-    return this.likeModel.findAll({ where: { user_id: userId } });
+    const likes = await this.likeModel.findAll({ where: { user_id: userId } });
+    return {
+      data: likes,
+      total: likes.length
+    }
   }
 
   findOne(id: number) {

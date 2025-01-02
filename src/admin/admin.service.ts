@@ -113,8 +113,12 @@ export class AdminService {
     };
   }
 
-  findAll() {
-    return this.adminModel.findAll({ include: { all: true } });
+  async findAll() {
+    const admins = await this.adminModel.findAll({ include: { all: true } });
+    return {
+      data: admins,
+      total: admins.length,
+    };
   }
 
   async findOne(id: number) {
@@ -130,15 +134,15 @@ export class AdminService {
     if (!admin) {
       throw new BadRequestException(`ID:${id} Admin does not exists!`);
     }
-    if(!admin.is_creator){
+    if (!admin.is_creator) {
       const updatedFields = { ...updateAdminDto, is_creator: false };
       const updatedAdmin = await this.adminModel.update(updatedFields, {
         where: { id },
         returning: true,
       });
       return updatedAdmin[1][0];
-    }else{
-      const updatedFields = { ...updateAdminDto};
+    } else {
+      const updatedFields = { ...updateAdminDto };
       const updatedAdmin = await this.adminModel.update(updatedFields, {
         where: { id },
         returning: true,

@@ -11,8 +11,12 @@ export class OwnersService {
     return this.ownerModel.create(createOwnerDto);
   }
 
-  findAll() {
-    return this.ownerModel.findAll();
+  async findAll() {
+    const owners = await this.ownerModel.findAll();
+    return{
+      data: owners,
+      total: owners.length,
+    }
   }
 
   async findOne(id: number) {

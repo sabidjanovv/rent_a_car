@@ -77,7 +77,11 @@ export class PaymentsService {
   }
 
   async findAll() {
-    return await this.paymentModel.findAll({ include: { all: true } });
+    const payments = await this.paymentModel.findAll({ include: { all: true } });
+    return{
+      data: payments,
+      total: payments.length
+    }
   }
 
   async findOne(id: number) {
