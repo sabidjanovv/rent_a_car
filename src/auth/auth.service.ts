@@ -74,6 +74,9 @@ export class AuthService {
     const existingEmail = await this.adminModel.findOne({
       where: { email: createAdminDto.email },
     })
+    const existingCreator = await this.adminModel.findOne({
+      where:{is_creator: true},
+    })
     if (existingAdmin) throw new BadRequestException('Admin already exists');
     if (existingEmail) throw new BadRequestException('Email already exists');
 
@@ -82,8 +85,11 @@ export class AuthService {
     }
 
     const hashed_password = await bcrypt.hash(createAdminDto.password, 7);
+    const isCreator = !existingCreator;
+
     const newAdmin = await this.adminModel.create({
       ...createAdminDto,
+      is_creator: isCreator,
       hashed_password,
     });
 
