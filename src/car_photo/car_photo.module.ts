@@ -5,12 +5,13 @@ import { FileModule } from '../file/file.module';
 import { CarPhoto } from './models/car_photo.model';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
-import { UserModule } from '../user/user.module';
+// import { UserModule } from '../user/user.module';
+// import { CarsService } from '../cars/cars.service';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([CarPhoto]),
-    // JwtModule.register({}),
+    JwtModule.register({}),
     FileModule,
     // UserModule,
   ],

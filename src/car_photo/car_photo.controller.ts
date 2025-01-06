@@ -16,14 +16,15 @@ import { CarPhotoService } from './car_photo.service';
 import { CreateCarPhotoDto } from './dto/create-car_photo.dto';
 import { CarPhoto } from './models/car_photo.model';
 import { UpdateCarPhotoDto } from './dto/update-car_photo.dto';
-// import { CarByIdGuard } from '../common/guards/car-by-id.guard';
+import { CarByIdGuard } from '../common/guards/car-by-id.guard';
+// import { CarBodyIdGuard } from '../common/guards/car-id-body.guard';
 
 @ApiTags('Obyekt rasmlari')
 @Controller('car-photo')
 export class CarPhotoController {
   constructor(private readonly carPhotoService: CarPhotoService) {}
 
-  // @UseGuards(CarByIdGuard)
+  // @UseGuards(CarBodyIdGuard)
   @ApiOperation({ summary: 'Obyekt Idsi va rasmini qoshish' })
   @ApiResponse({
     status: 201,
@@ -63,19 +64,19 @@ export class CarPhotoController {
     return this.carPhotoService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Obyekt rasmlarini tahrirlash' })
-  @ApiResponse({
-    status: 200,
-    description: 'Obyekt ID si orqali obyekt rasmlarini tahrirlash',
-    type: CarPhoto,
-  })
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCarPhotoDto: UpdateCarPhotoDto,
-  ) {
-    return this.carPhotoService.update(+id, updateCarPhotoDto);
-  }
+  // @ApiOperation({ summary: 'Obyekt rasmlarini tahrirlash' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Obyekt ID si orqali obyekt rasmlarini tahrirlash',
+  //   type: CarPhoto,
+  // })
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateCarPhotoDto: UpdateCarPhotoDto,
+  // ) {
+  //   return this.carPhotoService.update(+id, updateCarPhotoDto);
+  // }
 
   @ApiOperation({ summary: "Obyekt rasmlarini o'chirish" })
   @ApiResponse({

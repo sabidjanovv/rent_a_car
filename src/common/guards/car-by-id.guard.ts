@@ -56,7 +56,7 @@ export class CarByIdGuard implements CanActivate {
       });
     }
 
-    const carId = req.params.id || req.body.car_id;
+    const carId = req.params.id;
     // console.log(carId)
     const car = await this.carService.findOne(carId);
 

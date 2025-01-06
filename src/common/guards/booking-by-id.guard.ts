@@ -46,15 +46,15 @@ export class BookingByIdGuard implements CanActivate {
 
     if (payload.is_active !== true) {
       throw new ForbiddenException({
-        message: "Sizda bunday huquq yo'q!, Active emassiz!",
+        message: "Active emassiz! Active bo'lish uchun emailga yuborilgan link ustiga bosing!",
       });
     }
 
-    if (payload.is_customer !== true) {
-      throw new ForbiddenException(
-        "Sizda bunday huquq yo'q! Siz customer emassiz!"
-      );
-    }
+    // if (payload.is_customer !== true) {
+    //   throw new ForbiddenException(
+    //     "Sizda bunday huquq yo'q! Siz customer emassiz!"
+    //   );
+    // }
 
     const booking = await this.bookingService.findOne(req.params.id);
     const customerId = booking.customer_id;

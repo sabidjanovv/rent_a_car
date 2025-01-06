@@ -70,7 +70,7 @@ export class BookingController {
     description: 'Booking muvaffaqiyatli bekor qilindi.',
   })
   @ApiResponse({ status: 404, description: 'Booking topilmadi.' })
-  @Get(':id/cancel')
+  @Get('cancel/:id')
   cancel(@Param('id') id: string) {
     return this.bookingService.cancel(+id);
   }
