@@ -35,17 +35,4 @@ export class MailService {
       return false;
     }
   }
-
-  //   async sendMailCustomer(customer:Customer){
-  //     const url = `${process.env.API_URL}:${process.env.PORT}/api/auth/activate-customer/${customer.activation_link}`;
-  //     await this.mailerService.sendMail({
-  //       to: customer.email,
-  //       subject: "Rent a Car'ga xush kelibsiz",
-  //       template: "./confirm",
-  //       context: {
-  //         full_name: customer.full_name,
-  //         url,
-  //       },
-  //     });
-  //   }
 }

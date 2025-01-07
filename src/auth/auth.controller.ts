@@ -8,11 +8,6 @@ import { SignInDto } from './dto/admin-signin.dto';
 import { CookieGetter } from '../common/decorators/cookieGetter.decorator';
 import { User } from '../user/models/user.model';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-// import { AdminCreatorGuard } from '../common/guards/admin_creator.guard';
-// import { CreateOwnerDto } from '../owner/dto/create-owner.dto';
-// import { Owner } from '../owner/models/owner.model';
-// import { Customer } from '../customer/models/customer.model';
-// import { CreateCustomerDto } from '../customer/dto/create-customer.dto';
 
 @Controller('auth')
 export class AuthController {
