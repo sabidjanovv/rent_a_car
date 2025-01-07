@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { Car } from './models/car.model';
@@ -122,29 +122,29 @@ export class CarsService {
     };
   }
 
-  async findByBrand(brand: string) {
-    const cars = await this.carModel.findAll({
-      where: { brand: brand.toLowerCase() },
-      include: { all: true },
-    });
-    if (!cars.length) {
-      throw new NotFoundException(`No cars found with the brand: ${brand}`);
-    }
-    return { data: cars, total: cars.length };
-  }
+  // async findByBrand(brand: string) {
+  //   const cars = await this.carModel.findAll({
+  //     where: { brand: brand.toLowerCase() },
+  //     include: { all: true },
+  //   });
+  //   if (!cars.length) {
+  //     throw new NotFoundException(`No cars found with the brand: ${brand}`);
+  //   }
+  //   return { data: cars, total: cars.length };
+  // }
 
-  async findByModel(model: string) {
-    const cars = await this.carModel.findAll({
-      where: { model: model.toLowerCase() },
-      include: { all: true },
-    });
+  // async findByModel(model: string) {
+  //   const cars = await this.carModel.findAll({
+  //     where: { model: model.toLowerCase() },
+  //     include: { all: true },
+  //   });
 
-    if (!cars.length) {
-      throw new NotFoundException(`No cars found with the model: ${model}`);
-    }
+  //   if (!cars.length) {
+  //     throw new NotFoundException(`No cars found with the model: ${model}`);
+  //   }
 
-    return { data: cars, total: cars.length };
-  }
+  //   return { data: cars, total: cars.length };
+  // }
 
   async findCarsByPriceRange(minPrice: number, maxPrice: number) {
     if (!minPrice || !maxPrice) {
@@ -167,6 +167,43 @@ export class CarsService {
     }
 
     return { data: cars, total: cars.length };
+  }
+
+  async findCarsByBrandAndModel(brand?: string, model?: string) {
+    if (!brand && !model) {
+      throw new BadRequestException(
+        'At least one of "brand" or "model" must be provided.',
+      );
+    }
+
+    const filters: any = {};
+    if (brand) {
+      filters.brand = { [Op.iLike]: brand.trim() };
+    }
+    if (model) {
+      filters.model = { [Op.iLike]: model.trim() }; 
+    }
+
+    const cars = await this.carModel.findAll({
+      where: filters,
+      include: { all: true },
+    });
+
+    if (!cars.length) {
+      const missingParams = [
+        brand && `brand: ${brand}`,
+        model && `model: ${model}`,
+      ]
+        .filter(Boolean)
+        .join(' and ');
+
+      throw new NotFoundException(`No cars found with the ${missingParams}.`);
+    }
+
+    return {
+      data: cars,
+      total: cars.length,
+    };
   }
 
   async findOne(car_id: number) {

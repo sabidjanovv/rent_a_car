@@ -58,6 +58,23 @@ export class CarsController {
     return this.carsService.findAllFreeCar();
   }
 
+  @Get('car')
+  @ApiOperation({ summary: "Brand va Model nomi orqali mashinalarni olish" })
+  @ApiResponse({
+    status: 200,
+    description: 'Mashinalar muvaffaqiyatli olindi.',
+  })
+  @ApiResponse({ status: 400, description: 'Noto‘g‘ri parametrlar.' })
+  async findCarsByBrandAndModel(
+    @Query('brand') brand: string,
+    @Query('model') model: string,
+  ) {
+    const brandCar = String(brand)
+    const modelCar = String(model)
+
+    return this.carsService.findCarsByBrandAndModel(brandCar, modelCar);
+  }
+
   @Get('price')
   @ApiOperation({ summary: "Narx oralig'idagi mashinalarni olish" })
   @ApiResponse({
@@ -79,37 +96,37 @@ export class CarsController {
     return this.carsService.findCarsByPriceRange(minPrice, maxPrice);
   }
 
-  @Get('brand/:brand')
-  @ApiOperation({ summary: "brand orqali ma'lum bir mashinalarni olish" })
-  @ApiParam({
-    name: 'brand',
-    description: "Olish kerak bo'lgan mashinalarning brandi",
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Mashinalar muvaffaqiyatli olindi.',
-  })
-  @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
-  findByBrand(@Param('brand') brand: string) {
-    return this.carsService.findByBrand(brand);
-  }
+  // @Get('brand/:brand')
+  // @ApiOperation({ summary: "brand orqali ma'lum bir mashinalarni olish" })
+  // @ApiParam({
+  //   name: 'brand',
+  //   description: "Olish kerak bo'lgan mashinalarning brandi",
+  //   type: String,
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Mashinalar muvaffaqiyatli olindi.',
+  // })
+  // @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
+  // findByBrand(@Param('brand') brand: string) {
+  //   return this.carsService.findByBrand(brand);
+  // }
 
-  @Get('model/:model')
-  @ApiOperation({ summary: "model orqali ma'lum bir mashinalarni olish" })
-  @ApiParam({
-    name: 'model',
-    description: "Olish kerak bo'lgan mashinalarning modeli",
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Mashinalar muvaffaqiyatli olindi.',
-  })
-  @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
-  findByModel(@Param('model') model: string) {
-    return this.carsService.findByModel(model);
-  }
+  // @Get('model/:model')
+  // @ApiOperation({ summary: "model orqali ma'lum bir mashinalarni olish" })
+  // @ApiParam({
+  //   name: 'model',
+  //   description: "Olish kerak bo'lgan mashinalarning modeli",
+  //   type: String,
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Mashinalar muvaffaqiyatli olindi.',
+  // })
+  // @ApiResponse({ status: 404, description: 'Mashinalar topilmadi.' })
+  // findByModel(@Param('model') model: string) {
+  //   return this.carsService.findByModel(model);
+  // }
 
   @Get(':id')
   @ApiOperation({ summary: "ID orqali ma'lum bir mashinani olish" })
